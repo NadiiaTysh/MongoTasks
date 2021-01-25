@@ -22,8 +22,6 @@ for (let i = 0; i < 3000; i++) {
 
 const { insertedIds } = db.customers.insertMany(customers);
 
-const orders = [];
-
 insertedIds.forEach(id => {
     const quantity = Math.floor(Math.random() * 10) + 1;
    
@@ -36,8 +34,9 @@ insertedIds.forEach(id => {
             title: 'some title',
             product: 'some product'
         };
-        orders.push(order);
+
+        db.orders.bulkWrite([
+            { insertOne: { 'document': order } }
+        ])
     };
 });
-
-db.orders.insert(orders);
