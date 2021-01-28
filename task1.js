@@ -1,3 +1,4 @@
+load('./random.js');
 use ntyshko;
 
 db.customers.drop();
@@ -11,10 +12,10 @@ const customers = [];
 for (let i = 0; i < 3000; i++) {
     const customer = {
         name: {
-            first: 'some first name',
-            last: 'some last name'
+            first: faker.fName(),
+            last: faker.lName()
         },
-        balance: 15000,
+        balance: randomNumber(10000, 15000),
         created: new Date().toISOString(),
     };
     customers.push(customer);
@@ -33,11 +34,40 @@ insertedIds.forEach(id => {
             count: Math.floor(Math.random() * (100 - 1)) + 1,
             price: Math.floor(Math.random() * (100 - 20)) + 20,
             discount: Math.floor(Math.random() * (30 - 5)) + 5,
-            title: 'some title',
-            product: 'some product'
+            title: Date.now() + i,
+            product: faker.product()
         };
         orders.push(order);
     };
 });
 
-db.orders.insertMany(orders);
+db.orders.insert(orders);
+
+// Reading Data
+db.customers.aggregate([
+    { $project: {
+        fname: '$name.first',
+        lname: '$name.last',
+        _id: {
+            $toString: '$_id'
+        }
+    } },
+    { $lookup: {
+        from: 'orders',
+        localField: '_id',
+        foreignField:'customerId',
+        as: 'orders'
+    } },
+    { $project: {
+        'orders._id': '$_id',
+        fname: true,
+        lname: true,
+        'orders.count': true,
+        'orders.price': true,
+        'orders.discount': true,
+        'orders.product': true
+    } },
+    { $project: {
+        _id: false
+    } },
+]).pretty();
