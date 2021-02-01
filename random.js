@@ -133,7 +133,7 @@ const surnames = [
     'Wintheiser',
     'Gaylord',
     'Rau',
-    "O'Kon",
+    'O\'Kon',
     'Rippin',
     'Conn',
     'Abshire',
@@ -145,7 +145,7 @@ const surnames = [
     'Vandervort',
     'Douglas',
     'Stoltenberg',
-    "O'Connell",
+    'O\'Connell',
     'Yost',
     'Turcotte',
     'Cassin',
@@ -179,7 +179,7 @@ const surnames = [
     'Bergnaum',
     'Ferry',
     'Schaefer',
-    "O'Hara",
+    'O\'Hara',
     'Stiedemann',
     'Champlin',
     'Hand',
@@ -187,32 +187,59 @@ const surnames = [
     'Williamson',
     'Green'
 ];
-const products = [
-    'Oranges',
-    'Apples',
-    'Carrots',
-    'Bananas',
-    'Lemons',
-    'Potatoes',
-    'Corn',
-    'Pea',
-    'Tomato',
-    'Grapes'
+const nickEnds = [
+    'autumn', 'hidden', 'bitter', 'misty', 'silent', 'empty', 'dry', 
+    'dark', 'summer', 'icy', 'delicate', 'quiet', 'white', 'cool', 'spring',
+    'winter', 'patient', 'twilight', 'dawn', 'crimson', 'wispy', 'weathered',
+    'blue', 'billowing', 'broken', 'cold', 'damp', 'falling', 'frosty', 'green',
+    'long', 'late', 'lingering', 'bold', 'little', 'morning', 'muddy', 'old',
+    'red', 'rough', 'still', 'small', 'sparkling', 'throbbing', 'shy',
+    'wandering', 'withered', 'wild', 'black', 'young', 'holy', 'solitary',
+    'fragrant', 'aged', 'snowy', 'proud', 'floral', 'restless', 'divine',
+    'polished', 'ancient', 'purple', 'lively', 'nameless', 'waterfall', 'river',
+    'breeze', 'moon', 'rain', 'wind', 'sea', 'frog', 'smoke', 'star',
+    'morning', 'snow', 'lake', 'sunset', 'pine', 'shadow', 'leaf', 'dawn',
+    'glitter', 'forest', 'hill', 'cloud', 'meadow', 'sun', 'glade', 'bird',
+    'brook', 'butterfly', 'bush', 'dew', 'dust', 'field', 'fire', 'flower',
+    'firefly', 'feather', 'grass', 'haze', 'mountain', 'night', 'pond',
+    'darkness', 'snowflake', 'silence', 'sound', 'sky', 'shape', 'surf',
+    'thunder', 'violet', 'water', 'wildflower', 'wave', 'water', 'resonance',
+    'sun', 'wood', 'dream', 'cherry', 'tree', 'fog', 'frost', 'voice', 'paper'
 ];
+const domains = [
+    'gmail.com','yahoo.com','hotmail.com','msn.com','outlook.com','live.com','me.com','aol.com','mac.com'
+];
+
+const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 const randomNumber = (from, to) =>
     Math.floor(Math.random() * (to - from + 1)) + from;
 
-const randomDate = (start, end) =>
-    new Date(
-        start.getTime() + Math.random() * (end.getTime() - start.getTime())
-    );
+const generatePassword = (length) => {
+    let password = '';
+    const n = charset.length;
+    for (let i = 0; i < length; i++) {
+        password += charset.charAt(Math.floor(Math.random() * n));
+    };
+    return password;
+};
 
-const randomArray = (length, startNum, endNum) =>
-    [...new Array(length)].map(() => randomNumber(startNum, endNum));
+let fName = '';
+let lName = '';
 
 const faker = {
-    fName: () => names[randomNumber(0, names.length - 1)],
-    lName: () => surnames[randomNumber(0, surnames.length - 1)],
-    product: () => products[randomNumber(0, products.length - 1)]
+    getFName: () => {
+        const resultFName = names[randomNumber(0, names.length - 1)];
+        fName = resultFName;
+
+        return resultFName;
+    },
+    getLName: () => {
+        const resultLName = surnames[randomNumber(0, surnames.length - 1)];
+        lName = resultLName;
+
+        return resultLName;
+    },
+    getNickname: () => `${fName}_${nickEnds[randomNumber(0, nickEnds.length - 1)]}`.toLowerCase(),
+    getEmail: () => `${fName}.${lName}@${domains[randomNumber(0, domains.length - 1)]}`.toLowerCase(),
 };
